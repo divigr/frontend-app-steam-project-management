@@ -1,5 +1,6 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { FC } from 'react'
 import styled from 'styled-components'
 
@@ -8,11 +9,35 @@ interface SidebarProps {
   toggleSidebar: () => void
 }
 const Sidebar: FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
+  const router = useRouter()
+  console.log('router', router)
+
+  const getTitle = () => {
+    switch (router.asPath) {
+      case '/':
+        return 'Dashboard'
+      case '/info-user':
+        return 'Thông Tin Người Dùng'
+      case '/thong-tin-lo':
+      case '/thong-tin-lo/add':
+        return 'Thông Tin Lò'
+      case '/thong-tin-lo/quan-ly-lo':
+      case '/thong-tin-lo/quan-ly-lo/add':
+        return 'Quản Lý Lò Hơi'
+      case '/quan-ly-nguoi-dung':
+        return 'Quản Lý Người Dùng'
+      case '/settings':
+        return 'Cài Đặt'
+      default:
+        return 'Dashboard'
+    }
+  }
+
   return (
     <SidebarWrapper isOpen={isOpen}>
       {/* Sidebar cho màn hình lớn */}
       <div className={`slider-bar w-64 bg-gray-800 text-white p-4 h-screen md:block hidden`}>
-        <h2 className='text-2xl font-bold mb-6'>Dashboard</h2>
+        <h2 className='text-2xl font-bold mb-6'>{getTitle()}</h2>
         <nav className='flex-1 space-y-4'>
           <Link href='/' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Trang Chủ
@@ -22,6 +47,9 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           </Link>
           <Link href='/thong-tin-lo' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Thông Tin Lò
+          </Link>
+          <Link href='/thong-tin-lo/quan-ly-lo' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
+            Quản Lý Lò Hơi
           </Link>
           <Link href='/quan-ly-nguoi-dung' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Quản Lý Người Dùng
@@ -52,6 +80,9 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           <Link href='/users' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Thông Tin Lò
           </Link>
+          <Link href='/thong-tin-lo/quan-ly-lo' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
+            Quản Lý Lò Hơi
+          </Link>
           <Link href='/users' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Quản Lý Người Dùng
           </Link>
@@ -69,7 +100,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: 16rem;
-  background-color: #1f2937;
+  background-color: #ee3237;
   color: white;
   height: 100vh;
   display: flex;
@@ -79,6 +110,10 @@ const SidebarWrapper = styled.div<{ isOpen: boolean }>`
 
   @media (min-width: 768px) {
     transform: translateX(0);
+  }
+  .slider-bar {
+    background-color: #ee3237;
+    margin: 58px 0;
   }
 `
 
