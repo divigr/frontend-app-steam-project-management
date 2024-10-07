@@ -4,8 +4,25 @@ import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { deleteShift } from '../../redux/slices/boilerSliceManagement'
+import { useState } from 'react'
+import ModalQuanLyLo from './modal'
+import { ShiftData } from '../../models/ShiftData'
+import { formatDateTime } from '../../utils/formatDay'
 
 const QuanLyLo = () => {
+  const [selectedShift, setSelectedShift] = useState<ShiftData | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleViewQuanLyLo = (shift: ShiftData) => {
+    setSelectedShift(shift)
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setSelectedShift(null)
+  }
+
   const dispatch = useDispatch()
   const boilerShifts = useSelector((state: RootState) => state.boiler.shifts)
   const infoLo = useSelector((state: RootState) => state.boilerInfo.boilers)
@@ -43,7 +60,7 @@ const QuanLyLo = () => {
             <tr key={index}>
               <td>{infoLo.find((c) => c.id === shift.boilerId)?.tenLo || 'Lò không tồn tại'}</td>
               <td>{shift.ca}</td>
-              <td>{shift.dateTime}</td>
+              <td>{formatDateTime(shift.dateTime)}</td>
               <td>{shift.soLuongHoi}</td>
               <td>{shift.soLuongDien}</td>
               <td>{shift.hoaChat}</td>
@@ -51,12 +68,14 @@ const QuanLyLo = () => {
               <td>{shift.dau_do}</td>
               <td>{shift.nhienLieu}</td>
               <td>
-                <ActionButton onClick={() => console.log('View')}>
+                <ActionButton onClick={() => handleViewQuanLyLo(shift)}>
                   <FaEye />
                 </ActionButton>
-                <ActionButton onClick={() => console.log('Edit')}>
-                  <FaEdit />
-                </ActionButton>
+                <Link href={`/thong-tin-lo/quan-ly-lo/add?id=${shift.id}`}>
+                  <ActionButton>
+                    <FaEdit />
+                  </ActionButton>
+                </Link>
                 <ActionButton onClick={() => handleDelete(index)}>
                   <FaTrashAlt />
                 </ActionButton>
@@ -65,6 +84,9 @@ const QuanLyLo = () => {
           ))}
         </tbody>
       </Table>
+
+      {/* Render the modal when isModalOpen is true */}
+      {isModalOpen && selectedShift && <ModalQuanLyLo shift={selectedShift} onClose={closeModal} />}
     </Wrapper>
   )
 }

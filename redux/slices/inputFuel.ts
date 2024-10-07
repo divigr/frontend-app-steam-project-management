@@ -35,8 +35,14 @@ const fuelSlice = createSlice({
     deleteFuelInput: (state, action: PayloadAction<string>) => {
       state.fuelInputs = state.fuelInputs.filter((input) => input.id !== action.payload)
     },
+    updateFuelInput: (state, action: PayloadAction<FuelInput>) => {
+      const index = state.fuelInputs.findIndex((input) => input.id === action.payload.id)
+      if (index !== -1) {
+        state.fuelInputs[index] = action.payload
+      }
+    },
   },
 })
 
-export const { addFuelInput, deleteFuelInput } = fuelSlice.actions
+export const { addFuelInput, deleteFuelInput, updateFuelInput } = fuelSlice.actions
 export default fuelSlice.reducer

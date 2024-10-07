@@ -31,9 +31,15 @@ export const boilerSlice = createSlice({
     deleteShift: (state, action: PayloadAction<string>) => {
       state.shifts = state.shifts.filter((shift) => shift.id !== action.payload)
     },
+    updateShift: (state, action: PayloadAction<ShiftData>) => {
+      const index = state.shifts.findIndex((shift) => shift.id === action.payload.id)
+      if (index !== -1) {
+        state.shifts[index] = action.payload // Update the shift at the found index
+      }
+    },
   },
 })
 
-export const { addShift, deleteShift } = boilerSlice.actions
+export const { addShift, deleteShift, updateShift } = boilerSlice.actions
 
 export default boilerSlice.reducer

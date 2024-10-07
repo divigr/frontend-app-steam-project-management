@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { FormEvent, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
-import { addShift } from '../../redux/slices/boilerSliceManagement'
-import { useRouter } from 'next/router'
+import { addShift, updateShift } from '../../redux/slices/boilerSliceManagement'
 import { v4 as uuidv4 } from 'uuid'
 import styled from 'styled-components'
 
@@ -94,18 +94,37 @@ const AddShiftForBoiler = () => {
   const [nhienLieu, setNhienLieu] = useState('')
   const [dau_do, setDauDo] = useState('')
 
-  const dispatch = useDispatch()
   const router = useRouter()
+  const dispatch = useDispatch()
 
-  // Get the list of boilers from Redux
+  const { id } = router.query
+
+  const boilerShifts = useSelector((state: RootState) => state.boiler.shifts)
   const boilerInfo = useSelector((state: RootState) => state.boilerInfo.boilers)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Load shift data when editing
+  useEffect(() => {
+    if (id) {
+      const shiftToEdit = boilerShifts.find((shift) => shift.id === id)
+      if (shiftToEdit) {
+        setBoilerId(shiftToEdit.boilerId)
+        setCa(shiftToEdit.ca)
+        setDateTime(shiftToEdit.dateTime)
+        setSoLuongHoi(shiftToEdit.soLuongHoi)
+        setSoLuongDien(shiftToEdit.soLuongDien)
+        setHoaChat(shiftToEdit.hoaChat)
+        setMuoi(shiftToEdit.muoi)
+        setNhienLieu(shiftToEdit.nhienLieu)
+        setDauDo(shiftToEdit.dau_do)
+      }
+    }
+  }, [id, boilerShifts])
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    // Create a new shift with a unique id and boilerId
-    const newShift = {
-      id: uuidv4(),
+    const dataShift = {
+      id: id || uuidv4(),
       boilerId,
       ca,
       dateTime,
@@ -113,20 +132,28 @@ const AddShiftForBoiler = () => {
       soLuongDien,
       hoaChat,
       muoi,
-      dau_do,
       nhienLieu,
+      dau_do,
     }
 
-    // Dispatch the addShift action
-    dispatch(addShift(newShift))
+    const shiftId = Array.isArray(id) ? id[0] : id
 
-    // Redirect back to the boiler information page
+    if (typeof shiftId === 'string') {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _, ...restOfShiftData } = dataShift
+      dispatch(updateShift({ id: shiftId, ...restOfShiftData }))
+    } else {
+      // Add a new shift if no id exists
+      dispatch(addShift(dataShift))
+    }
+
+    // Redirect to the shift management page after submission
     router.push('/thong-tin-lo/quan-ly-lo')
   }
 
   return (
     <Container>
-      <Title>Add Shift for Boiler</Title>
+      <Title>{id ? 'Cập Nhập Thông Tin Quản Lý Ca' : 'Thêm Thông Tin Quản Lý Ca'}</Title>
       <Form onSubmit={handleSubmit}>
         {/* Select the boiler */}
         <Fieldset>
@@ -182,7 +209,7 @@ const AddShiftForBoiler = () => {
           <Input type='text' value={nhienLieu} onChange={(e) => setNhienLieu(e.target.value)} required />
         </Fieldset>
 
-        <Button type='submit'>Gửi</Button>
+        <Button type='submit'>{id ? 'Cập Nhập' : 'Gửi'}</Button>
       </Form>
     </Container>
   )

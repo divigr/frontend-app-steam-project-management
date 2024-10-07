@@ -4,6 +4,10 @@ import styled from 'styled-components'
 import { RootState } from '../../redux/store'
 import { deleteFuelInput } from '../../redux/slices/inputFuel'
 import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa'
+import { useState } from 'react'
+import { FuelInput } from '../../models/FuelInput'
+import ViewFuelInputModal from './modal'
+import { formatDateTime } from '../../utils/formatDay'
 
 const Header = styled.div`
   display: flex;
@@ -62,7 +66,18 @@ const NhiemLieuDauVaoIndex = () => {
   const fuelInputs = useSelector((state: RootState) => state.inputFuel.fuelInputs)
   const infoLo = useSelector((state: RootState) => state.boilerInfo.boilers)
 
-  console.log('fuelInputs - infoLo', fuelInputs, infoLo)
+  const [selectedFuelInput, setSelectedFuelInput] = useState<FuelInput | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleView = (fuelInput: FuelInput) => {
+    setSelectedFuelInput(fuelInput)
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setSelectedFuelInput(null)
+  }
 
   const handleDelete = (id: string) => {
     dispatch(deleteFuelInput(id))
@@ -96,7 +111,7 @@ const NhiemLieuDauVaoIndex = () => {
           {fuelInputs.map((input) => (
             <tr key={input.id}>
               <TableCell> {infoLo.find((c) => c.id === input.boilerId)?.tenLo || 'Lò không tồn tại'}</TableCell>
-              <TableCell>{input.dateTime}</TableCell>
+              <TableCell>{formatDateTime(input.dateTime)}</TableCell>
               <TableCell>{input.sku}</TableCell>
               <TableCell>{input.soPhieuCan}</TableCell>
               <TableCell>{input.soThuTuXe}</TableCell>
@@ -106,12 +121,14 @@ const NhiemLieuDauVaoIndex = () => {
               <TableCell>{input.loaiHang}</TableCell>
               <TableCell>{input.doAm}%</TableCell>
               <td>
-                <ActionButton onClick={() => console.log('View')}>
+                <ActionButton onClick={() => handleView(input)}>
                   <FaEye />
                 </ActionButton>
-                <ActionButton onClick={() => console.log('Edit')}>
-                  <FaEdit />
-                </ActionButton>
+                <Link href={`/thong-tin-lo/quan-ly-lo/nhien-lieu-dau-vao/add?id=${input.id}`}>
+                  <ActionButton>
+                    <FaEdit />
+                  </ActionButton>
+                </Link>
                 <ActionButton onClick={() => handleDelete(input.id)}>
                   <FaTrashAlt />
                 </ActionButton>
@@ -119,6 +136,7 @@ const NhiemLieuDauVaoIndex = () => {
             </tr>
           ))}
         </tbody>
+        {isModalOpen && selectedFuelInput && <ViewFuelInputModal fuelInput={selectedFuelInput} onClose={closeModal} />}
       </Table>
     </>
   )

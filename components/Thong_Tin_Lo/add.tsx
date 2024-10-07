@@ -57,7 +57,7 @@ const AddThongTinLo = () => {
 
   return (
     <div className='max-w-lg mx-auto p-6 bg-white shadow-md rounded-md'>
-      <h1 className='text-xl font-bold mb-6'>Add Thông Tin Lò</h1>
+      <h1 className='text-xl font-bold mb-6'>{id ? 'Cập Nhập Thông Tin Lò' : 'Thêm Thông Tin Lò'}</h1>
 
       <form onSubmit={handleSubmit}>
         <div className='mb-4'>
@@ -100,7 +100,7 @@ const AddThongTinLo = () => {
         </div>
 
         <button type='submit' className='w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700'>
-          {id ? 'Update' : 'Gửi'}{' '}
+          {id ? 'Cập Nhập' : 'Gửi'}
         </button>
       </form>
     </div>
