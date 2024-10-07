@@ -1,8 +1,7 @@
-// boilerSliceManagement.ts
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface BoilerData {
+  id: string
   tenLo: string
   diaChiLo: string
   congSuatLo: string
@@ -13,7 +12,7 @@ interface BoilerState {
 }
 
 const initialState: BoilerState = {
-  boilers: [], // An array to store multiple boiler entries
+  boilers: [],
 }
 
 export const boilerInfoSlice = createSlice({
@@ -21,10 +20,10 @@ export const boilerInfoSlice = createSlice({
   initialState,
   reducers: {
     addBoiler: (state, action: PayloadAction<BoilerData>) => {
-      state.boilers.push(action.payload) // Add new boiler information to the list
+      state.boilers.push(action.payload)
     },
-    deleteBoiler: (state, action: PayloadAction<number>) => {
-      state.boilers.splice(action.payload, 1) // Remove boiler based on index
+    deleteBoiler: (state, action: PayloadAction<string>) => {
+      state.boilers = state.boilers.filter((boiler) => boiler.id !== action.payload)
     },
   },
 })

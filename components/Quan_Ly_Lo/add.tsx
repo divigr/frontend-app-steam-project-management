@@ -1,157 +1,191 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { addShift } from '../../redux/slices/boilerSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
+import { addShift } from '../../redux/slices/boilerSliceManagement'
 import { useRouter } from 'next/router'
-import 'tailwindcss/tailwind.css'
+import { v4 as uuidv4 } from 'uuid'
+import styled from 'styled-components'
 
-const AddThongTinQuanLyLo = () => {
+// Styled Components
+const Container = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+`
+
+const Title = styled.h1`
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+`
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`
+
+const Fieldset = styled.fieldset`
+  margin-bottom: 15px;
+  border: none;
+`
+
+const Label = styled.label`
+  display: block;
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 5px;
+`
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+`
+
+const Select = styled.select`
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+`
+
+const Button = styled.button`
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`
+
+const AddShiftForBoiler = () => {
+  const [boilerId, setBoilerId] = useState('')
+  const [ca, setCa] = useState('')
+  const [dateTime, setDateTime] = useState('')
+  const [soLuongHoi, setSoLuongHoi] = useState('')
+  const [soLuongDien, setSoLuongDien] = useState('')
+  const [hoaChat, setHoaChat] = useState('')
+  const [muoi, setMuoi] = useState('')
+  const [nhienLieu, setNhienLieu] = useState('')
+  const [dau_do, setDauDo] = useState('')
+
   const dispatch = useDispatch()
   const router = useRouter()
 
-  // Initialize form data
-  const [shiftData, setShiftData] = useState({
-    ca: 'Ca 1', // Default to Ca 1
-    soLuongHoi: '',
-    soLuongDien: '',
-    hoaChat: '',
-    muoi: '',
-    do: '',
-    nhienLieu: '',
-    dateTime: '',
-  })
-  const [isFormEnabled, setIsFormEnabled] = useState(false)
+  // Get the list of boilers from Redux
+  const boilerInfo = useSelector((state: RootState) => state.boilerInfo.boilers)
 
-  // Enable form fields if date/time is selected
-  const handleDateTimeChange = (e) => {
-    const { value } = e.target
-    setShiftData({ ...shiftData, dateTime: value })
-    setIsFormEnabled(!!value) // Enable form fields if dateTime is selected
-  }
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setShiftData({
-      ...shiftData,
-      [name]: value,
-    })
-  }
-
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const finalShiftData = {
-      ...shiftData,
+    // Create a new shift with a unique id and boilerId
+    const newShift = {
+      id: uuidv4(),
+      boilerId,
+      ca,
+      dateTime,
+      soLuongHoi,
+      soLuongDien,
+      hoaChat,
+      muoi,
+      dau_do,
+      nhienLieu,
     }
 
-    dispatch(addShift(finalShiftData))
-    router.push('/thong-tin-lo') // Navigate back to the list page
+    // Dispatch the addShift action
+    dispatch(addShift(newShift))
+
+    // Redirect back to the boiler information page
+    router.push('/thong-tin-lo/quan-ly-lo')
   }
 
   return (
-    <div className='max-w-lg mx-auto p-6 bg-white shadow-md rounded-md'>
-      <h1 className='text-xl font-bold mb-6'>Add Thông Tin Lò</h1>
+    <Container>
+      <Title>Add Shift for Boiler</Title>
+      <Form onSubmit={handleSubmit}>
+        {/* Select the boiler */}
+        <Fieldset>
+          <Label>Chọn Lò</Label>
+          <Select value={boilerId} onChange={(e) => setBoilerId(e.target.value)} required>
+            <option value=''>Chọn Lò</option>
+            {boilerInfo.map((boiler) => (
+              <option key={boiler.id} value={boiler.id}>
+                {boiler?.tenLo} - {boiler?.diaChiLo}
+              </option>
+            ))}
+          </Select>
+        </Fieldset>
 
-      <form onSubmit={handleSubmit}>
-        <div className='mb-4'>
-          <label className='block mb-2 text-gray-700'>Chọn Ngày / Giờ</label>
-          <input
-            type='datetime-local'
-            className='w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600'
-            value={shiftData.dateTime}
-            onChange={handleDateTimeChange}
-            required
-          />
-        </div>
+        {/* Shift Details */}
+        <Fieldset>
+          <Label>Ca</Label>
+          <Input type='text' value={ca} onChange={(e) => setCa(e.target.value)} required />
+        </Fieldset>
 
-        <fieldset disabled={!isFormEnabled}>
-          <div className='mb-4'>
-            <label className='block mb-2 text-gray-700'>Chọn Ca</label>
-            <select name='ca' value={shiftData.ca} onChange={handleInputChange} className='w-full px-4 py-2 border rounded-md' required>
-              <option value='Ca 1'>Ca 1</option>
-              <option value='Ca 2'>Ca 2</option>
-              <option value='Ca 3'>Ca 3</option>
-            </select>
-          </div>
+        <Fieldset>
+          <Label>Date and Time</Label>
+          <Input type='datetime-local' value={dateTime} onChange={(e) => setDateTime(e.target.value)} required />
+        </Fieldset>
 
-          <div className='mb-4'>
-            <label className='block mb-2 text-gray-700'>Số Lượng Hơi Tổng (Ca)</label>
-            <input
-              type='number'
-              name='soLuongHoi'
-              value={shiftData.soLuongHoi}
-              onChange={handleInputChange}
-              className='w-full px-4 py-2 border rounded-md'
-              required
-            />
-          </div>
+        <Fieldset>
+          <Label>Số Lượng Hơi</Label>
+          <Input type='text' value={soLuongHoi} onChange={(e) => setSoLuongHoi(e.target.value)} required />
+        </Fieldset>
 
-          <div className='mb-4'>
-            <label className='block mb-2 text-gray-700'>Số Lượng Điện Tổng (Ca)</label>
-            <input
-              type='number'
-              name='soLuongDien'
-              value={shiftData.soLuongDien}
-              onChange={handleInputChange}
-              className='w-full px-4 py-2 border rounded-md'
-              required
-            />
-          </div>
+        <Fieldset>
+          <Label>Số Lượng Điện</Label>
+          <Input type='text' value={soLuongDien} onChange={(e) => setSoLuongDien(e.target.value)} required />
+        </Fieldset>
 
-          <div className='mb-4'>
-            <label className='block mb-2 text-gray-700'>Hóa Chất</label>
-            <input
-              type='number'
-              name='hoaChat'
-              value={shiftData.hoaChat}
-              onChange={handleInputChange}
-              className='w-full px-4 py-2 border rounded-md'
-              required
-            />
-          </div>
+        <Fieldset>
+          <Label>Hóa Chất</Label>
+          <Input type='text' value={hoaChat} onChange={(e) => setHoaChat(e.target.value)} required />
+        </Fieldset>
 
-          <div className='mb-4'>
-            <label className='block mb-2 text-gray-700'>Muối</label>
-            <input
-              type='number'
-              name='muoi'
-              value={shiftData.muoi}
-              onChange={handleInputChange}
-              className='w-full px-4 py-2 border rounded-md'
-              required
-            />
-          </div>
+        <Fieldset>
+          <Label>Muối</Label>
+          <Input type='text' value={muoi} onChange={(e) => setMuoi(e.target.value)} required />
+        </Fieldset>
 
-          <div className='mb-4'>
-            <label className='block mb-2 text-gray-700'>Dầu DO</label>
-            <input
-              type='number'
-              name='do'
-              value={shiftData.do}
-              onChange={handleInputChange}
-              className='w-full px-4 py-2 border rounded-md'
-              required
-            />
-          </div>
+        <Fieldset>
+          <Label>DO (Dissolved Oxygen)</Label>
+          <Input type='text' value={dau_do} onChange={(e) => setDauDo(e.target.value)} required />
+        </Fieldset>
 
-          <div className='mb-4'>
-            <label className='block mb-2 text-gray-700'>Nhiên Liệu Tồn Kho</label>
-            <input
-              type='number'
-              name='nhienLieu'
-              value={shiftData.nhienLieu}
-              onChange={handleInputChange}
-              className='w-full px-4 py-2 border rounded-md'
-              required
-            />
-          </div>
+        <Fieldset>
+          <Label>Nhiên Liệu</Label>
+          <Input type='text' value={nhienLieu} onChange={(e) => setNhienLieu(e.target.value)} required />
+        </Fieldset>
 
-          <button type='submit' className='w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700'>
-            Gửi
-          </button>
-        </fieldset>
-      </form>
-    </div>
+        <Button type='submit'>Gửi</Button>
+      </Form>
+    </Container>
   )
 }
 
-export default AddThongTinQuanLyLo
+export default AddShiftForBoiler

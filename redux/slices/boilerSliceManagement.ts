@@ -1,36 +1,39 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface ShiftData {
+  id: string
+  boilerId: string
   ca: string
   dateTime: string
   soLuongHoi: string
   soLuongDien: string
   hoaChat: string
   muoi: string
-  do: string
+  dau_do: string
   nhienLieu: string
 }
 
-interface BoilerState {
+interface BoilerShiftState {
   shifts: ShiftData[]
 }
 
-const initialState: BoilerState = {
+const initialState: BoilerShiftState = {
   shifts: [],
 }
 
 export const boilerSlice = createSlice({
-  name: 'boiler',
+  name: 'boilerShift',
   initialState,
   reducers: {
-    addShift: (state: { shifts: any[] }, action: PayloadAction<ShiftData>) => {
-      state.shifts.push(action.payload) // Ensure this is a plain object
+    addShift: (state, action: PayloadAction<ShiftData>) => {
+      state.shifts.push(action.payload)
     },
-    deleteShift: (state: { shifts: any[] }, action: PayloadAction<number>) => {
-      state.shifts.splice(action.payload, 1)
+    deleteShift: (state, action: PayloadAction<string>) => {
+      state.shifts = state.shifts.filter((shift) => shift.id !== action.payload)
     },
   },
 })
 
 export const { addShift, deleteShift } = boilerSlice.actions
+
 export default boilerSlice.reducer

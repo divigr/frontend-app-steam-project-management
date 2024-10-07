@@ -3,19 +3,20 @@ import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { addBoiler } from '../../redux/slices/boilerInfo' // Use the correct action from boilerInfo slice
 import 'tailwindcss/tailwind.css'
+import { v4 as uuidv4 } from 'uuid'
 
-const AddThongTinLo = ({ onSubmit }) => {
+const AddThongTinLo = () => {
   const dispatch = useDispatch()
   const router = useRouter()
 
   // Initialize form data for boiler information
   const [boilerData, setBoilerData] = useState({
+    id: uuidv4(),
     tenLo: '',
     diaChiLo: '',
     congSuatLo: '',
   })
-
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setBoilerData({
       ...boilerData,
@@ -23,14 +24,13 @@ const AddThongTinLo = ({ onSubmit }) => {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
 
     const finalBoilerData = {
       ...boilerData,
     }
 
-    // Dispatch the action to Redux store using addBoiler from boilerInfo slice
     dispatch(addBoiler(finalBoilerData))
     // Navigate back to the list page after submission
     router.push('/thong-tin-lo')

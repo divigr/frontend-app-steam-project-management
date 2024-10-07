@@ -51,6 +51,12 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           <Link href='/thong-tin-lo/quan-ly-lo' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Quản Lý Lò Hơi
           </Link>
+          <Link href='/thong-tin-lo/quan-ly-lo/nhien-lieu-dau-vao' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
+            Nhiên Liệu Đầu Vào
+          </Link>
+          <Link href='/thong-tin-lo/quan-ly-lo/thong-tin-don-gia' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
+            Thông Tin Đơn Giá
+          </Link>
           <Link href='/quan-ly-nguoi-dung' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Quản Lý Người Dùng
           </Link>
@@ -82,6 +88,12 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           </Link>
           <Link href='/thong-tin-lo/quan-ly-lo' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Quản Lý Lò Hơi
+          </Link>
+          <Link href='/thong-tin-lo/quan-ly-lo/nhien-lieu-dau-vao' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
+            Nhiên Liệu Đầu Vào
+          </Link>
+          <Link href='/thong-tin-lo/quan-ly-lo/thong-tin-don-gia' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
+            Thông Tin Đơn Giá
           </Link>
           <Link href='/users' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Quản Lý Người Dùng

@@ -8,10 +8,10 @@ import { deleteShift } from '../../redux/slices/boilerSliceManagement'
 const QuanLyLo = () => {
   const dispatch = useDispatch()
   const boilerShifts = useSelector((state: RootState) => state.boiler.shifts)
-  console.log('boilerShifts', boilerShifts)
+  const infoLo = useSelector((state: RootState) => state.boilerInfo.boilers)
 
-  const handleDelete = (index: number) => {
-    dispatch(deleteShift(index))
+  const handleDelete = (index: number | string) => {
+    dispatch(deleteShift(index.toString()))
   }
 
   return (
@@ -19,13 +19,14 @@ const QuanLyLo = () => {
       <Header>
         <h1>Quản Lý Lò Hơi</h1>
         {/* Add Button to redirect to the form page */}
-        <Link href='/thong-tin-lo/add'>
+        <Link href='/thong-tin-lo/quan-ly-lo/add'>
           <AddButton>+ Add Thông Tin</AddButton>
         </Link>
       </Header>
       <Table>
         <thead>
           <tr>
+            <th>Tên Lò</th>
             <th>Ca</th>
             <th>Ngày/Giờ</th>
             <th>Số Lượng Hơi</th>
@@ -40,13 +41,14 @@ const QuanLyLo = () => {
         <tbody>
           {boilerShifts.map((shift, index) => (
             <tr key={index}>
+              <td>{infoLo.find((c) => c.id === shift.boilerId)?.tenLo || 'Lò không tồn tại'}</td>
               <td>{shift.ca}</td>
               <td>{shift.dateTime}</td>
               <td>{shift.soLuongHoi}</td>
               <td>{shift.soLuongDien}</td>
               <td>{shift.hoaChat}</td>
               <td>{shift.muoi}</td>
-              <td>{shift.do}</td>
+              <td>{shift.dau_do}</td>
               <td>{shift.nhienLieu}</td>
               <td>
                 <ActionButton onClick={() => console.log('View')}>
