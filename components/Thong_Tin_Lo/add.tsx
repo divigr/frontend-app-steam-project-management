@@ -1,13 +1,17 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
-import { addBoiler } from '../../redux/slices/boilerInfo' // Use the correct action from boilerInfo slice
-import 'tailwindcss/tailwind.css'
+import { FormEvent, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
+import { addBoiler, updateBoiler } from '../../redux/slices/boilerInfo' // Use the correct action from boilerInfo slice
 import { v4 as uuidv4 } from 'uuid'
+import 'tailwindcss/tailwind.css'
 
 const AddThongTinLo = () => {
   const dispatch = useDispatch()
   const router = useRouter()
+  const { id } = router.query
+
+  const boilers = useSelector((state: RootState) => state.boilerInfo.boilers)
 
   // Initialize form data for boiler information
   const [boilerData, setBoilerData] = useState({
@@ -16,6 +20,7 @@ const AddThongTinLo = () => {
     diaChiLo: '',
     congSuatLo: '',
   })
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setBoilerData({
@@ -24,17 +29,31 @@ const AddThongTinLo = () => {
     })
   }
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const finalBoilerData = {
-      ...boilerData,
+    if (typeof id === 'string') {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _, ...restOfBoilerData } = boilerData
+      dispatch(updateBoiler({ id, ...restOfBoilerData }))
+    } else {
+      // For adding a new boiler, just dispatch the boilerData without an id
+      dispatch(addBoiler(boilerData))
     }
 
-    dispatch(addBoiler(finalBoilerData))
-    // Navigate back to the list page after submission
+    // Redirect after submission
     router.push('/thong-tin-lo')
   }
+
+  useEffect(() => {
+    if (id) {
+      // Prefill the form with the existing boiler details
+      const existingBoiler = boilers.find((boiler) => boiler.id === id)
+      if (existingBoiler) {
+        setBoilerData(existingBoiler)
+      }
+    }
+  }, [id, boilers])
 
   return (
     <div className='max-w-lg mx-auto p-6 bg-white shadow-md rounded-md'>
@@ -81,7 +100,7 @@ const AddThongTinLo = () => {
         </div>
 
         <button type='submit' className='w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700'>
-          Gửi
+          {id ? 'Update' : 'Gửi'}{' '}
         </button>
       </form>
     </div>

@@ -42,9 +42,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           <Link href='/' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Trang Chủ
           </Link>
-          <Link href='/info-user' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
-            Thông Tin Người Dùng
-          </Link>
+
           <Link href='/thong-tin-lo' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Thông Tin Lò
           </Link>
@@ -80,9 +78,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           <Link href='/' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Trang Chủ
           </Link>
-          <Link href='/users' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
-            Thông Tin Người Dùng
-          </Link>
+
           <Link href='/users' className='block p-3 bg-gray-700 hover:bg-gray-600 rounded-md'>
             Thông Tin Lò
           </Link>

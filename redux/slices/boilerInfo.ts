@@ -25,9 +25,15 @@ export const boilerInfoSlice = createSlice({
     deleteBoiler: (state, action: PayloadAction<string>) => {
       state.boilers = state.boilers.filter((boiler) => boiler.id !== action.payload)
     },
+    updateBoiler: (state, action: PayloadAction<BoilerData>) => {
+      const index = state.boilers.findIndex((boiler) => boiler.id === action.payload.id)
+      if (index !== -1) {
+        state.boilers[index] = action.payload // Update the boiler's details
+      }
+    },
   },
 })
 
-export const { addBoiler, deleteBoiler } = boilerInfoSlice.actions
+export const { addBoiler, deleteBoiler, updateBoiler } = boilerInfoSlice.actions
 
 export default boilerInfoSlice.reducer

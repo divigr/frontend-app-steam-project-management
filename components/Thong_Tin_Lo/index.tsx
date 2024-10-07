@@ -1,18 +1,33 @@
+import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { deleteBoiler } from '../../redux/slices/boilerInfo'
+import BoilerInfoModal from './modal'
+import { BoilerData } from '../../models/BoilerData'
 
 const QuanLyThongTinLo = () => {
   const dispatch = useDispatch()
+
+  const [selectedBoiler, setSelectedBoiler] = useState<BoilerData | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   // Get boiler and shift information from Redux
   const boilers = useSelector((state: RootState) => state.boilerInfo.boilers)
 
   const handleDeleteBoiler = (id: string) => {
     dispatch(deleteBoiler(id))
+  }
+  const handleViewBoiler = (boiler: BoilerData) => {
+    setSelectedBoiler(boiler)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedBoiler(null)
   }
 
   return (
@@ -40,12 +55,14 @@ const QuanLyThongTinLo = () => {
               <td>{boiler.congSuatLo}</td>
 
               <td>
-                <ActionButton onClick={() => console.log('View')}>
+                <ActionButton onClick={() => handleViewBoiler(boiler)}>
                   <FaEye />
                 </ActionButton>
-                <ActionButton onClick={() => console.log('Edit')}>
-                  <FaEdit />
-                </ActionButton>
+                <Link href={`/thong-tin-lo/add?id=${boiler.id}`}>
+                  <ActionButton>
+                    <FaEdit />
+                  </ActionButton>
+                </Link>
                 <ActionButton onClick={() => handleDeleteBoiler(boiler.id)}>
                   <FaTrashAlt />
                 </ActionButton>
@@ -54,6 +71,9 @@ const QuanLyThongTinLo = () => {
           ))}
         </tbody>
       </Table>
+
+      {/* Modal to show boiler info */}
+      {isModalOpen && <BoilerInfoModal boiler={selectedBoiler} onClose={handleCloseModal} />}
     </Wrapper>
   )
 }

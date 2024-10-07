@@ -93,7 +93,7 @@ const NhiemLieuDauVaoIndex = () => {
           </tr>
         </thead>
         <tbody>
-          {fuelInputs.map((input, index) => (
+          {fuelInputs.map((input) => (
             <tr key={input.id}>
               <TableCell> {infoLo.find((c) => c.id === input.boilerId)?.tenLo || 'Lò không tồn tại'}</TableCell>
               <TableCell>{input.dateTime}</TableCell>
@@ -112,7 +112,7 @@ const NhiemLieuDauVaoIndex = () => {
                 <ActionButton onClick={() => console.log('Edit')}>
                   <FaEdit />
                 </ActionButton>
-                <ActionButton onClick={() => handleDelete(index)}>
+                <ActionButton onClick={() => handleDelete(input.id)}>
                   <FaTrashAlt />
                 </ActionButton>
               </td>

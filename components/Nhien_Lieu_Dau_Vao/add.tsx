@@ -112,6 +112,8 @@ const AddFuelInput = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
+    const doAmNumber = parseFloat(doAm)
+
     const newFuelInput = {
       id: uuidv4(),
       boilerId,
@@ -125,7 +127,7 @@ const AddFuelInput = () => {
       khoiLuongXe,
       khoiLuongHang,
       loaiHang,
-      doAm,
+      doAm: doAmNumber,
     }
 
     // Dispatch the new fuel input to the store (assumes a Redux action is defined)
