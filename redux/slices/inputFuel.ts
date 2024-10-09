@@ -15,6 +15,8 @@ interface FuelInput {
   khoiLuongHang: number
   loaiHang: string
   doAm: number
+  nhaCungCap: string
+  nguoiNhanHang: string
 }
 
 interface FuelState {

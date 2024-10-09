@@ -101,8 +101,8 @@ const NhiemLieuDauVaoIndex = () => {
             <TableHeader>Số Thứ Tự Xe</TableHeader>
             <TableHeader>Chất Lượng</TableHeader>
             <TableHeader>Biển Số Xe</TableHeader>
-            <TableHeader>Khối Lượng Hàng</TableHeader>
-            <TableHeader>Loại Hàng</TableHeader>
+            <TableHeader>Khối Lượng Hàng (kg ) </TableHeader>
+            <TableHeader>Loại Nhiên Liệu</TableHeader>
             <TableHeader>Độ Ẩm</TableHeader>
             <TableHeader>Hành Động</TableHeader>
           </tr>

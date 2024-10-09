@@ -96,6 +96,8 @@ const AddFuelInput = () => {
   const [khoiLuongHang, setKhoiLuongHang] = useState(0)
   const [loaiHang, setLoaiHang] = useState('')
   const [doAm, setDoAm] = useState('')
+  const [nguoiNhanHang, setNguoiNhanHang] = useState('')
+  const [nhaCungCap, setNhaCungCap] = useState('')
 
   const fuelInputs = useSelector((state: RootState) => state.inputFuel.fuelInputs)
   const dispatch = useDispatch()
@@ -119,6 +121,8 @@ const AddFuelInput = () => {
         setKhoiLuongHang(fuelInput.khoiLuongHang)
         setLoaiHang(fuelInput.loaiHang)
         setDoAm(fuelInput.doAm.toString())
+        setNguoiNhanHang(fuelInput.nguoiNhanHang)
+        setNhaCungCap(fuelInput.nhaCungCap)
       }
     }
   }, [id, fuelInputs])
@@ -152,11 +156,13 @@ const AddFuelInput = () => {
       soThuTuXe,
       chatLuongNhienLieu,
       bienSoXe,
+      nhaCungCap,
       khoiLuongTongXe,
       khoiLuongXe,
       khoiLuongHang,
       loaiHang,
       doAm: doAmNumber,
+      nguoiNhanHang,
     }
 
     if (id) {
@@ -262,7 +268,19 @@ const AddFuelInput = () => {
         {/* Độ Ẩm */}
         <Fieldset>
           <Label>Độ Ẩm</Label>
-          <Input type='number' step='0.01' value={doAm} onChange={(e) => setDoAm(e.target.value)} required />
+          <Input type='number' step='0.01' value={doAm} onChange={(e) => setDoAm(e.target.value)} />
+        </Fieldset>
+
+        {/* Nhà Cung Cấp */}
+        <Fieldset>
+          <Label>Nhà Cung Cấp</Label>
+          <Input type='number' step='0.01' value={nhaCungCap} onChange={(e) => setNhaCungCap(e.target.value)} required />
+        </Fieldset>
+
+        {/* Người Nhận Hàng */}
+        <Fieldset>
+          <Label>Người Nhận Hàng</Label>
+          <Input type='number' step='0.01' value={nguoiNhanHang} onChange={(e) => setNguoiNhanHang(e.target.value)} required />
         </Fieldset>
 
         <Button type='submit'>{id ? 'Cập Nhập' : 'Gửi'}</Button>

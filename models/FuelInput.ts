@@ -7,11 +7,13 @@ export interface FuelInput {
   soThuTuXe: string
   chatLuongNhienLieu: string
   bienSoXe: string
+  nhaCungCap: string
   khoiLuongTongXe: number
   khoiLuongXe: number
   khoiLuongHang: number
   loaiHang: string
   doAm: number
+  nguoiNhanHang: string
 }
 
 export interface FuelState {
